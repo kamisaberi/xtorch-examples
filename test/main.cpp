@@ -6,9 +6,9 @@
 //#include <string>
 //#include <filesystem>
 //#include <curl/curl.h>
-#include <TorchExtension/datasets/ucf.h>
-#include <TorchExtension/datasets/cifar.h>
-#include <TorchExtension/utils/archiver.h>
+#include <xtorch/datasets/ucf.h>
+#include <xtorch/datasets/cifar.h>
+#include <xtorch/utils/archiver.h>
 
 
 int main() {
