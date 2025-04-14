@@ -3,7 +3,7 @@ project(Examples)
 
 list(APPEND CMAKE_PREFIX_PATH /home/kami/libs/c++/libtorch/)
 find_package(Torch REQUIRED)
-find_package(TorchExtension REQUIRED)
+find_package(LibxTorch REQUIRED)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
