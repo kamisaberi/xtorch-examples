@@ -7,6 +7,7 @@
 //#include <filesystem>
 //#include <curl/curl.h>
 #include <xTorch/xtorch.h>
+#include <torch/torch.h>
 
 
 int main() {
@@ -14,6 +15,8 @@ int main() {
     std::cout << tensor << endl;
     std::cout << "Hello World" << std::endl;
     std::string  r = "./test/test1/ali";
+    auto dataset = xt::data::datasets::MNIST("/home/kami/Documents/temp/", DataMode::TRAIN, true);
+
     // torch::ext::data::datasets::UCF101 u1(r);
     // std::cout << "End\n";
 //    torch::ext::data::datasets::CIFAR100 cifar100("/home/kami/Documents/temp/", true , true);
