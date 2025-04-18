@@ -37,7 +37,7 @@ target_link_libraries(${PROJECT_NAME}
 #        OpenSSL::Crypto
         LibLZMA::LibLZMA
         ${LibArchive_LIBRARIES}
-        ${TORCH_LIBRARIES}
+        ${XTORCH_LIBRARIES}
 #        xTorch::xTorch
 )
 
