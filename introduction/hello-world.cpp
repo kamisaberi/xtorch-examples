@@ -8,7 +8,7 @@ int main() {
     std::cout << "Hello World" << std::endl;
     std::string  r = "./test/test1/ali";
     auto temp = xt::temp::TestDataset();
-    auto dataset = xt::data::datasets::MNIST("/home/kami/Documents/temp/", DataMode::TRAIN, true);
+    auto dataset = xt::data::datasets::MNIST("/home/kami/Documents/datasets/", DataMode::TRAIN, true);
 
     return 0;
 }
