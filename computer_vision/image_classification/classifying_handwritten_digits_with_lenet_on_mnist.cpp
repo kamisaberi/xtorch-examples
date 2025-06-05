@@ -11,7 +11,6 @@
 using namespace std;
 
 
-
 int main()
 {
     std::cout.precision(10);
@@ -23,17 +22,11 @@ int main()
 
     auto compose = std::make_unique<xt::transforms::Compose>(transform_list);
 
-    auto dataset = xt::datasets::MNIST(
-        "/home/kami/Documents/datasets/", xt::datasets::DataMode::TRAIN, false, std::move(compose));
+    auto dataset = xt::datasets::MNIST("/home/kami/Documents/datasets/",
+                                       xt::datasets::DataMode::TRAIN, false,
+                                       std::move(compose));
 
 
-    int num_epochs = 2;
-    auto datum = dataset.get(0);
-    cout << datum.data.sizes() << endl;
-    cout << dataset.size().value() << endl;
-
-
-    // return 0;
     xt::dataloaders::ExtendedDataLoader data_loader(dataset, 64, true, 2, /*prefetch_factor=*/2);
 
     xt::models::LeNet5 model(10);
@@ -52,7 +45,6 @@ int main()
            .add_callback(logger);
 
     trainer.fit(model, data_loader, &data_loader, torch::Device(torch::kCPU));
-
 
 
     return 0;
