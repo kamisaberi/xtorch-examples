@@ -48,10 +48,10 @@ int main() {
 
         // Training loop
         for (int epoch = 0; epoch < num_epochs; ++epoch) {
-            for (auto& batch : *data_loader) {
+            for (auto& batch : data_loader) {
                 // Train Discriminator
                 netD.zero_grad();
-                auto real_data = batch.data.to(device);
+                auto real_data = batch.first;
                 auto batch_size = real_data.size(0);
 
                 // Real images
