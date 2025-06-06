@@ -36,15 +36,10 @@ target_link_libraries(${PROJECT_NAME}
         ${ZLIB_LIBRARIES}
         ${LIBTAR_LIBRARY}
         OpenSSL::SSL
-
-        #        OpenSSL::Crypto
         LibLZMA::LibLZMA
         ${LibArchive_LIBRARIES}
         ${XTORCH_LIBRARIES}
         xTorch::xTorch
-        #        NNXRuntime::onnxruntime # From find_package(ONNXRuntime)
-        #        httplib::httplib         # From FetchContent cpp-httplib (if it creates an imported target like this)
-        # If not, you might need to use ${cpp-httplib_SOURCE_DIR} for include
         OpenSSL::SSL
         OpenSSL::Crypto
         ZLIB::ZLIB
@@ -54,4 +49,4 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,/usr/local/lib:/usr/lib")
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,/usr/local/lib:/usr/lib")
