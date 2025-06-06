@@ -33,13 +33,12 @@ int main()
     netG.to(device);
     netD.to(device);
 
+
     // Optimizers
-    torch::optim::Adam optimG(netG->parameters(), lr, {beta1, 0.999});
-    torch::optim::Adam optimD(netD->parameters(), lr, {beta1, 0.999});
+    torch::optim::Adam optimG(netG.parameters(), torch::optim::AdamOptions(1e-3).betas({beta1, 0.999}));
+    torch::optim::Adam optimD(netG.parameters(), torch::optim::AdamOptions(1e-3).betas({beta1, 0.999}));
 
     auto criterion = torch::nn::BCELoss();
-
-    // Load data
 
     std::vector<std::shared_ptr<xt::Module>> transform_list;
     transform_list.push_back(
@@ -58,29 +57,29 @@ int main()
         for (auto& batch : *data_loader)
         {
             // Train Discriminator
-            netD->zero_grad();
+            netD.zero_grad();
             auto real_data = batch.data.to(device);
             auto batch_size = real_data.size(0);
 
             // Real images
             auto real_label = torch::full({batch_size}, 1.0, device);
-            auto output = netD->forward(real_data).view(-1);
+            auto output = netD.forward(real_data).view(-1);
             auto errD_real = criterion(output, real_label);
             errD_real.backward();
 
             // Fake images
             auto noise = torch::randn({batch_size, nz, 1, 1}, device);
-            auto fake_data = netG->forward(noise);
+            auto fake_data = netG.forward(noise);
             auto fake_label = torch::full({batch_size}, 0.0, device);
-            output = netD->forward(fake_data.detach()).view(-1);
+            output = netD.forward(fake_data.detach()).view(-1);
             auto errD_fake = criterion(output, fake_label);
             errD_fake.backward();
             auto errD = errD_real + errD_fake;
             optimD.step();
 
             // Train Generator
-            netG->zero_grad();
-            output = netD->forward(fake_data).view(-1);
+            netG.zero_grad();
+            output = netD.forward(fake_data).view(-1);
             auto errG = criterion(output, real_label); // Generator wants discriminator to think fakes are real
             errG.backward();
             optimG.step();
@@ -95,7 +94,7 @@ int main()
         if (epoch % 2 == 0)
         {
             auto noise = torch::randn({16, nz, 1, 1}, device);
-            auto fake_images = netG->forward(noise);
+            auto fake_images = netG.forward(noise);
             // Implement image saving logic here if needed
         }
     }
