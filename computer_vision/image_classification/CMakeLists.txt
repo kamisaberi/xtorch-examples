@@ -27,22 +27,15 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
         ${ZLIB_LIBRARIES}
         ${LIBTAR_LIBRARY}
         OpenSSL::SSL
-
-        #        OpenSSL::Crypto
         LibLZMA::LibLZMA
         ${LibArchive_LIBRARIES}
         ${XTORCH_LIBRARIES}
         xTorch::xTorch
-        #        NNXRuntime::onnxruntime # From find_package(ONNXRuntime)
-        #        httplib::httplib         # From FetchContent cpp-httplib (if it creates an imported target like this)
-        # If not, you might need to use ${cpp-httplib_SOURCE_DIR} for include
         OpenSSL::SSL
         OpenSSL::Crypto
         ZLIB::ZLIB
         ${ONNXRUNTIME_LIBRARY}
         onnxruntime
-
-
 )
 
 
