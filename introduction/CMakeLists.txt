@@ -1,27 +1,6 @@
 cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 project(examples)
 
-
-## Find ONNX Runtime
-#find_library(ONNXRUNTIME_LIBRARY
-#        NAMES onnxruntime
-#        PATHS /usr/local/lib /usr/lib
-#)
-#find_path(ONNXRUNTIME_INCLUDE_DIR
-#        NAMES onnxruntime_cxx_api.h
-#        PATHS /usr/local/include/onnxruntime /usr/include/onnxruntime
-#)
-#
-#
-## Find OpenSSL
-#find_package(OpenSSL REQUIRED)
-#
-#if(NOT ONNXRUNTIME_LIBRARY OR NOT ONNXRUNTIME_INCLUDE_DIR)
-#    message(FATAL_ERROR "ONNX Runtime not found. Ensure it is installed.")
-#endif()
-
-
-
 list(APPEND CMAKE_PREFIX_PATH /home/kami/libs/c++/libtorch/)
 find_package(Torch REQUIRED)
 find_package(xTorch REQUIRED)
@@ -34,7 +13,7 @@ find_package(ZLIB REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(onnxruntime REQUIRED)
 
-find_package(httplib REQUIRED)
+#find_package(httplib REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
