@@ -92,9 +92,9 @@ int main() {
         }
 
         // Save models
-        torch::save(netG, "generator.pt");
-        torch::save(netD, "discriminator.pt");
-        std::cout << "Models saved to generator.pt and discriminator.pt" << std::endl;
+        // torch::save(netG, "generator.pt");
+        // torch::save(netD, "discriminator.pt");
+        // std::cout << "Models saved to generator.pt and discriminator.pt" << std::endl;
     }
     catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
