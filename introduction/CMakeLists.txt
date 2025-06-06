@@ -44,6 +44,7 @@ target_link_libraries(${PROJECT_NAME}
         OpenSSL::Crypto
         ZLIB::ZLIB
         ${ONNXRUNTIME_LIBRARY}
+        onnxruntime
 
 
 )
