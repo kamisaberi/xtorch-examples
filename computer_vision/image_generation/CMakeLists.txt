@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
-project(image_classification)
+project(image_generation)
 list(APPEND CMAKE_PREFIX_PATH /home/kami/libs/cpp/libtorch/)
 find_package(Torch REQUIRED)
 find_package(xTorch REQUIRED)
@@ -65,15 +65,15 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 #
 #)
 
-#========================================= classifying_handwritten_digits_with_lenet_on_mnist =========================================
+#========================================= generating_images_with_dcgan =========================================
 
-add_executable(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_SOURCE_FILES} classifying_handwritten_digits_with_lenet_on_mnist.cpp)
-target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist "${TORCH_LIBRARIES}")
-set_property(TARGET classifying_handwritten_digits_with_lenet_on_mnist PROPERTY CXX_STANDARD 17)
-target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
-target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
-target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
-target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
+add_executable(generating_images_with_dcgan ${TEST_SOURCE_FILES} generating_images_with_dcgan.cpp)
+target_link_libraries(generating_images_with_dcgan "${TORCH_LIBRARIES}")
+set_property(TARGET generating_images_with_dcgan PROPERTY CXX_STANDARD 17)
+target_include_directories(generating_images_with_dcgan PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
+target_link_libraries(generating_images_with_dcgan ${TEST_LIBRARIES})
+target_include_directories(generating_images_with_dcgan PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+target_link_libraries(generating_images_with_dcgan ${TEST_LIBRARIES})
 
 
 
