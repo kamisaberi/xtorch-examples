@@ -1,27 +1,72 @@
 #include <onnxruntime/onnxruntime_cxx_api.h>
-#include "httplib.h"
+#include <curl/curl.h>
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <string>
 
-// Function to download model
+// Callback function for libcurl to write data to file
+size_t write_data(void* ptr, size_t size, size_t nmemb, void* stream) {
+    size_t written = fwrite(ptr, size, nmemb, (FILE*)stream);
+    return written;
+}
+
+// Function to download model using libcurl
 bool download_model(const std::string& url, const std::string& output_path) {
-    httplib::Client cli("https://github.com");
-    auto path = url.substr(url.find("github.com") + 10);
-    auto res = cli.Get(path.c_str());
-    if (res && res->status == 200) {
-        std::ofstream ofs(output_path, std::ios::binary);
-        ofs.write(res->body.c_str(), res->body.size());
-        ofs.close();
-        std::cout << "Downloaded model to " << output_path << std::endl;
-        return true;
-    } else {
-        std::cerr << "Failed to download model from " << url << ". Status: " << (res ? res->status : -1) << std::endl;
+    FILE* fp = fopen(output_path.c_str(), "wb");
+    if (!fp) {
+        std::cerr << "Failed to open file: " << output_path << std::endl;
         return false;
     }
+
+    CURL* handle = curl_easy_init();
+    if (!handle) {
+        std::cerr << "Failed to create curl handle." << std::endl;
+        fclose(fp);
+        return false;
+    }
+
+    // Set curl options
+    curl_easy_setopt(handle, CURLOPT_URL, url.c_str());
+    curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, write_data);
+    curl_easy_setopt(handle, CURLOPT_WRITEDATA, fp);
+    curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, 1L); // Handle redirects
+
+    // Perform download
+    CURLcode res = curl_easy_perform(handle);
+    if (res != CURLE_OK) {
+        std::cerr << "Download failed: " << curl_easy_strerror(res) << std::endl;
+        fclose(fp);
+        curl_easy_cleanup(handle);
+        return false;
+    }
+
+    // Check HTTP status code
+    long http_code = 0;
+    curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &http_code);
+    if (http_code != 200) {
+        std::cerr << "Download failed with HTTP status: " << http_code << std::endl;
+        fclose(fp);
+        curl_easy_cleanup(handle);
+        return false;
+    }
+
+    // Clean up
+    fclose(fp);
+    curl_easy_cleanup(handle);
+
+    std::cout << "Downloaded model to " << output_path << std::endl;
+    return true;
 }
 
 int main() {
+    // Initialize libcurl globally
+    CURLcode res = curl_global_init(CURL_GLOBAL_DEFAULT);
+    if (res != CURLE_OK) {
+        std::cerr << "Failed to initialize libcurl globally: " << curl_easy_strerror(res) << std::endl;
+        return -1;
+    }
+
     // Model URL and path
     const std::string model_url = "https://github.com/onnx/models/raw/main/validated/vision/classification/resnet/model/resnet50-v2-7.onnx";
     const std::string model_path = "resnet50.onnx";
@@ -29,18 +74,29 @@ int main() {
     // Download model
     if (!download_model(model_url, model_path)) {
         std::cerr << "Model download failed." << std::endl;
+        curl_global_cleanup();
         return -1;
     }
 
     // Initialize ONNX Runtime
-    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "simple_onnx_inference");
+    Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "hello_world");
     Ort::SessionOptions session_options;
     session_options.SetIntraOpNumThreads(1);
+
+    // Verify API base
+    const OrtApi* api = OrtGetApiBase()->GetApi(ORT_API_VERSION);
+    if (!api) {
+        std::cerr << "Failed to get ONNX Runtime API." << std::endl;
+        curl_global_cleanup();
+        return -1;
+    }
+
     Ort::Session session(nullptr);
     try {
         session = Ort::Session(env, model_path.c_str(), session_options);
     } catch (const Ort::Exception& e) {
         std::cerr << "Failed to load model: " << e.what() << std::endl;
+        curl_global_cleanup();
         return -1;
     }
 
@@ -68,8 +124,12 @@ int main() {
         std::cout << "First output value: " << output_data[0] << std::endl;
     } catch (const Ort::Exception& e) {
         std::cerr << "Inference error: " << e.what() << std::endl;
+        curl_global_cleanup();
         return -1;
     }
+
+    // Clean up libcurl
+    curl_global_cleanup();
 
     return 0;
 }
