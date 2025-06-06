@@ -26,7 +26,6 @@ int main()
                                        xt::datasets::DataMode::TRAIN, false,
                                        std::move(compose));
 
-
     xt::dataloaders::ExtendedDataLoader data_loader(dataset, 64, true, 2, /*prefetch_factor=*/2);
 
     xt::models::LeNet5 model(10);
