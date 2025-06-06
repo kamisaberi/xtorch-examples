@@ -10,7 +10,7 @@ find_package(CURL REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(SndFile REQUIRED)
-find_package(ONNXRuntime REQUIRED)
+find_package(onnxruntime REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -38,6 +38,12 @@ target_link_libraries(${PROJECT_NAME}
         ${LibArchive_LIBRARIES}
         ${XTORCH_LIBRARIES}
         xTorch::xTorch
+#        NNXRuntime::onnxruntime # From find_package(ONNXRuntime)
+#        httplib::httplib         # From FetchContent cpp-httplib (if it creates an imported target like this)
+        # If not, you might need to use ${cpp-httplib_SOURCE_DIR} for include
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        ZLIB::ZLIB
         )
 
 
