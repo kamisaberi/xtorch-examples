@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
-project(examples)
-
+project(image_classification)
 list(APPEND CMAKE_PREFIX_PATH /home/kami/libs/cpp/libtorch/)
 find_package(Torch REQUIRED)
 find_package(xTorch REQUIRED)
@@ -13,20 +12,12 @@ find_package(ZLIB REQUIRED)
 find_package(SndFile REQUIRED)
 find_package(onnxruntime REQUIRED)
 
-#find_package(httplib REQUIRED)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(TEST_SOURCE_FILES ${UTILITY_FILES} ${MEDIA_FILES} ${DEFINITION_FILES} ${DATASET_FILES} ${MODEL_FILES} ${TRANSFORM_FILES} res_mnist_2.cpp)
+#set(TEST_SOURCE_FILES ${UTILITY_FILES} ${MEDIA_FILES} ${DEFINITION_FILES} ${DATASET_FILES} ${MODEL_FILES} ${TRANSFORM_FILES})
 
-add_executable(${PROJECT_NAME} ${TEST_SOURCE_FILES})
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
-
-include_directories(/usr/include)
-
-target_include_directories(${PROJECT_NAME} PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS} ${ONNXRUNTIME_INCLUDE_DIR})
-target_link_libraries(${PROJECT_NAME}
+set(TEST_LIBRARIES ${CURL_LIBRARIES}
         ${CURL_LIBRARIES}
         ${TORCH_LIBRARIES}
         ${OpenCV_LIBS}
@@ -45,9 +36,58 @@ target_link_libraries(${PROJECT_NAME}
         ZLIB::ZLIB
         ${ONNXRUNTIME_LIBRARY}
         onnxruntime
-
-
 )
 
 
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath,/usr/local/lib:/usr/lib")
+
+#add_executable(${PROJECT_NAME} ${TEST_SOURCE_FILES})
+#set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
+
+#include_directories(/usr/include usr/local/include/xtorch/)
+
+#target_include_directories(${PROJECT_NAME} PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+#target_link_libraries(${PROJECT_NAME}
+#        ${CURL_LIBRARIES}
+#        ${TORCH_LIBRARIES}
+#        ${OpenCV_LIBS}
+#        ${ZLIB_LIBS}
+#        ${ZIP_LIBRARIES}
+#        zip
+#        ${ZLIB_LIBRARIES}
+#        ${LIBTAR_LIBRARY}
+#        OpenSSL::SSL
+#        #        OpenSSL::Crypto
+#        LibLZMA::LibLZMA
+#        ${LibArchive_LIBRARIES}
+#        ${XTORCH_LIBRARIES}
+#        xTorch::xTorch
+#        ${ONNXRUNTIME_LIBRARY}
+#
+#)
+
+#========================================= classifying_handwritten_digits_with_lenet_on_mnist =========================================
+
+add_executable(py_test ${TEST_SOURCE_FILES} classifying_handwritten_digits_with_lenet_on_mnist.cpp)
+target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist "${TORCH_LIBRARIES}")
+set_property(TARGET classifying_handwritten_digits_with_lenet_on_mnist PROPERTY CXX_STANDARD 17)
+target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
+target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
+target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
+
+
+#
+##========================================= fine_tuning_resnet_on_cifar10 =========================================
+#
+#add_executable(fine_tuning_resnet_on_cifar10 ${TEST_SOURCE_FILES} fine_tuning_resnet_on_cifar10.cpp)
+#target_link_libraries(fine_tuning_resnet_on_cifar10 "${TORCH_LIBRARIES}")
+#set_property(TARGET fine_tuning_resnet_on_cifar10 PROPERTY CXX_STANDARD 17)
+#target_include_directories(fine_tuning_resnet_on_cifar10 PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
+#target_link_libraries(fine_tuning_resnet_on_cifar10 ${TEST_LIBRARIES})
+#target_include_directories(fine_tuning_resnet_on_cifar10 PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+#target_link_libraries(fine_tuning_resnet_on_cifar10 ${TEST_LIBRARIES})
+#
+#
+#
+#
+##
