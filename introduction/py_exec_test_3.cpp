@@ -23,14 +23,9 @@ torch::Tensor create_dummy_input_tensor(int batch_size, int channels, int height
 
 int main(int argc, char* argv[])
 {
-    std::cout << "--- External xTorch Full Example App ---" << std::endl;
-
-    // --- Configuration ---
     std::string hf_model_to_convert = "microsoft/resnet-18";
     fs::path base_output_dir = fs::current_path() / "example_outputs";
-    fs::create_directories(base_output_dir); // Ensure base output directory exists
-
-    // fs::path download_destination = base_output_dir / "downloaded_mnist_example.py";
+    fs::create_directories(base_output_dir);
     fs::path torchscript_output_path = base_output_dir / "converted_resnet18.pt";
 
     torch::Device device = torch::kCPU;
