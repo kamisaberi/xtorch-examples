@@ -28,18 +28,16 @@ int main(int argc, char* argv[])
     }
     std::cout << device << std::endl;
 
-
     if (xt::convert_hf_model_to_torchscript_from_lib(hf_model_to_convert, torchscript_output_path))
     {
-        std::cout << "  Model conversion initiated by xTorch library. Check Python script output." << std::endl;
+        std::cout << "  Model conversion succeed" << std::endl;
     }
     else
     {
-        std::cerr << "  Model conversion initiation failed via xTorch library." << std::endl;
+        std::cerr << "  Model conversion failed" << std::endl;
         return 1;
     }
 
-    std::cout << "\nLoading converted TorchScript model and performing inference..." << std::endl;
     if (fs::exists(torchscript_output_path))
     {
         torch::jit::script::Module model;
@@ -47,7 +45,6 @@ int main(int argc, char* argv[])
         {
             model = torch::jit::load(torchscript_output_path.string(), device); // Load to selected device
             model.eval(); // Set to evaluation mode
-            std::cout << "  TorchScript model loaded successfully." << std::endl;
 
             int batch = 1;
             int channels = 3;
@@ -61,18 +58,8 @@ int main(int argc, char* argv[])
             std::vector<torch::jit::IValue> inputs;
             inputs.push_back(dummy_input);
 
-            std::cout << "  Performing inference..." << std::endl;
             at::Tensor output_tensor = model.forward(inputs).toTensor(); // The .toTensor() is important
 
-            std::cout << "  Inference successful!" << std::endl;
-            std::cout << "  Output tensor shape: " << output_tensor.sizes() << std::endl;
-            std::cout << "  Output tensor device: " << output_tensor.device() << std::endl;
-            // For a classification model, output_tensor usually contains logits
-            // For ResNet-18 (1000 classes), shape would be [batch_size, 1000]
-            // You can print some values, but it's raw logits.
-            // std::cout << "  Output tensor (first 5 logits of first batch item): "
-            //           << output_tensor.slice(/*dim=*/1, /*start=*/0, /*end=*/5).slice(/*dim=*/0, /*start=*/0, /*end=*/1)
-            //           << std::endl;
 
             // Get predicted class (argmax on logits)
             torch::Tensor predicted_probs = torch::softmax(output_tensor, /*dim=*/1);
