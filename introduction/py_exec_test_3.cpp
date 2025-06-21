@@ -1,17 +1,10 @@
 #include <iostream>
 #include <string>
-#include <filesystem> // For fs::current_path, fs::exists
+#include <filesystem>
 #include <vector>
-
-// Include the utility header from the installed xTorch library
-#include <xtorch/xtorch.h> // Assumes headers are installed in an 'xtorch' subdirectory
-
-// === NEW: Include LibTorch headers for inference ===
-#include <torch/script.h> // LibTorch's main header for TorchScript
-#include <torch/torch.h>  // For torch::Tensor, torch::kCPU etc.
-// Potentially for image loading/preprocessing if you add that:
-// #include <opencv2/opencv.hpp> // If using OpenCV
-// ====================================================
+#include <xtorch/xtorch.h>
+#include <torch/script.h>
+#include <torch/torch.h>
 
 namespace fs = std::filesystem;
 
