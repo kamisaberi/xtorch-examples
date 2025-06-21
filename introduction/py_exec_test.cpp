@@ -7,7 +7,8 @@
 
 namespace fs = std::filesystem;
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[])
+{
     std::cout << "--- External xTorch Example App ---" << std::endl;
 
     // --- 1. Test File Download ---
@@ -15,9 +16,12 @@ int main(int argc, char* argv[]) {
     fs::path download_destination = fs::current_path() / "downloaded_mnist_example.py";
 
     std::cout << "\nAttempting to download a file using xTorch::download_file..." << std::endl;
-    if (xtorch::download_file(file_url, download_destination)) {
+    if (xtorch::download_file(file_url, download_destination))
+    {
         std::cout << "Download test successful! File saved to: " << download_destination << std::endl;
-    } else {
+    }
+    else
+    {
         std::cout << "Download test failed." << std::endl;
     }
 
@@ -32,21 +36,28 @@ int main(int argc, char* argv[]) {
     std::cout << "Model: " << hf_model << std::endl;
     std::cout << "Output: " << torchscript_output << std::endl;
 
-    if (xtorch::convert_hf_model_to_torchscript_from_lib(hf_model, torchscript_output)) {
+    if (xtorch::convert_hf_model_to_torchscript_from_lib(hf_model, torchscript_output))
+    {
         std::cout << "Model conversion initiated successfully via xTorch library!" << std::endl;
         std::cout << "Check console output from Python script for detailed status." << std::endl;
-        if (fs::exists(torchscript_output)) {
+        if (fs::exists(torchscript_output))
+        {
             std::cout << "Converted model file found at: " << torchscript_output << std::endl;
-        } else {
+        }
+        else
+        {
             std::cout << "Converted model file NOT found. Python script might have had issues." << std::endl;
         }
-    } else {
+    }
+    else
+    {
         std::cout << "Model conversion initiation failed via xTorch library." << std::endl;
     }
 
     // --- 3. Optional: Show discovered paths ---
     std::cout << "\nAttempting to get xTorch internal paths (for debugging/info):" << std::endl;
-    if (auto paths_opt = xtorch::get_internal_library_paths()) {
+    if (auto paths_opt = xtorch::get_internal_library_paths())
+    {
         const auto& paths = *paths_opt;
         std::cout << "  xTorch Library Location: " << paths.library_path << std::endl;
         std::cout << "  xTorch Install Prefix:   " << paths.install_prefix << std::endl;
@@ -54,7 +65,9 @@ int main(int argc, char* argv[]) {
         std::cout << "  xTorch Venv Directory:   " << paths.venv_dir << std::endl;
         std::cout << "  xTorch Python Exec:      " << paths.python_executable << std::endl;
         std::cout << "  xTorch Conversion Script:" << paths.conversion_script << std::endl;
-    } else {
+    }
+    else
+    {
         std::cout << "  Could not retrieve xTorch internal paths." << std::endl;
     }
 
