@@ -16,7 +16,7 @@ int main(int argc, char* argv[])
     fs::path download_destination = fs::current_path() / "downloaded_mnist_example.py";
 
     std::cout << "\nAttempting to download a file using xTorch::download_file..." << std::endl;
-    if (xtorch::download_file(file_url, download_destination))
+    if (xt::download_file(file_url, download_destination))
     {
         std::cout << "Download test successful! File saved to: " << download_destination << std::endl;
     }
@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     std::cout << "Model: " << hf_model << std::endl;
     std::cout << "Output: " << torchscript_output << std::endl;
 
-    if (xtorch::convert_hf_model_to_torchscript_from_lib(hf_model, torchscript_output))
+    if (xt::convert_hf_model_to_torchscript_from_lib(hf_model, torchscript_output))
     {
         std::cout << "Model conversion initiated successfully via xTorch library!" << std::endl;
         std::cout << "Check console output from Python script for detailed status." << std::endl;
