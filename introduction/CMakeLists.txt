@@ -67,7 +67,7 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 
 #========================================= classifying_handwritten_digits_with_lenet_on_mnist =========================================
 
-add_executable(py_test ${TEST_SOURCE_FILES} py_test.cpp)
+add_executable(py_test ${TEST_SOURCE_FILES} py_exec_test.cpp)
 target_link_libraries(py_test "${TORCH_LIBRARIES}")
 set_property(TARGET py_test PROPERTY CXX_STANDARD 17)
 target_include_directories(py_test PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})

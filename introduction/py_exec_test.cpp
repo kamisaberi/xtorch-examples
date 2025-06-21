@@ -62,7 +62,7 @@ int main(int argc, char* argv[])
 
     // --- 3. Optional: Show discovered paths ---
     std::cout << "\nAttempting to get xTorch internal paths (for debugging/info):" << std::endl;
-    if (auto paths_opt = xtorch::get_internal_library_paths())
+    if (auto paths_opt = xt::get_internal_library_paths())
     {
         const auto& paths = *paths_opt;
         std::cout << "  xTorch Library Location: " << paths.library_path << std::endl;
