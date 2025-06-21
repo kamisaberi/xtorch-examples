@@ -28,7 +28,8 @@ int main(int argc, char* argv[])
     }
     std::cout << device << std::endl;
 
-    if (xt::convert_hf_model_to_torchscript_from_lib(hf_model_to_convert, torchscript_output_path))
+    if (xt::convert_hf_model_to_torchscript_from_lib(hf_model_to_convert, torchscript_output_path, 1, 224, 3,
+                                                     xt::VerboseType::ERRORS))
     {
         std::cout << "  Model conversion succeed" << std::endl;
     }
