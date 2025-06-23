@@ -4,24 +4,28 @@
 #include <random> // For dummy data
 
 // --- Configuration ---
-const int64_t IMG_SIZE = 256;         // Input image size
-const int64_t BATCH_SIZE = 4;         // Keep small for example
-const int64_t NUM_CLASSES = 5;       // Number of segmentation classes (including background)
+const int64_t IMG_SIZE = 256; // Input image size
+const int64_t BATCH_SIZE = 4; // Keep small for example
+const int64_t NUM_CLASSES = 5; // Number of segmentation classes (including background)
 const int64_t NUM_EPOCHS = 5;
 const double LEARNING_RATE = 1e-3;
 const int64_t LOG_INTERVAL = 10;
 const int64_t BACKBONE_OUTPUT_CHANNELS = 128; // Channels from our simple backbone
-const int64_t ASPP_OUTPUT_CHANNELS = 256;    // Output channels for each ASPP branch and final ASPP
+const int64_t ASPP_OUTPUT_CHANNELS = 256; // Output channels for each ASPP branch and final ASPP
 
 // --- Dummy Semantic Segmentation Dataset ---
-class DummySegDataset : public torch::data::datasets::Dataset<DummySegDataset> {
+class DummySegDataset : public torch::data::datasets::Dataset<DummySegDataset>
+{
 public:
     size_t dataset_size_;
 
-    DummySegDataset(size_t size = 1000) : dataset_size_(size) {}
+    DummySegDataset(size_t size = 1000) : dataset_size_(size)
+    {
+    }
 
     // Returns a single data sample (image tensor, mask tensor)
-    torch::data::Example<torch::Tensor, torch::Tensor> get(size_t index) override {
+    torch::data::Example<torch::Tensor, torch::Tensor> get(size_t index) override
+    {
         // Dummy image tensor (batch dimension will be added by DataLoader)
         torch::Tensor image = torch::randn({3, IMG_SIZE, IMG_SIZE});
 
@@ -32,7 +36,8 @@ public:
         return {image, mask};
     }
 
-    torch::optional<size_t> size() const override {
+    torch::optional<size_t> size() const override
+    {
         return dataset_size_;
     }
 };
@@ -41,52 +46,66 @@ public:
 // --- DeepLabV3 Components ---
 
 // Basic Convolution Block
-struct ConvBNReLUImpl : torch::nn::Module {
+struct ConvBNReLUImpl : torch::nn::Module
+{
     torch::nn::Conv2d conv{nullptr};
     torch::nn::BatchNorm2d bn{nullptr};
     torch::nn::ReLU relu{nullptr};
 
     ConvBNReLUImpl(int64_t in_channels, int64_t out_channels, int kernel_size,
-                   int stride = 1, int padding = 0, int dilation = 1, bool use_relu = true) {
+                   int stride = 1, int padding = 0, int dilation = 1, bool use_relu = true)
+    {
         conv = register_module("conv", torch::nn::Conv2d(
-            torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)
-            .stride(stride).padding(padding).dilation(dilation).bias(false))); // Bias false if BN follows
+                                   torch::nn::Conv2dOptions(in_channels, out_channels, kernel_size)
+                                   .stride(stride).padding(padding).dilation(dilation).bias(false)));
+        // Bias false if BN follows
         bn = register_module("bn", torch::nn::BatchNorm2d(out_channels));
-        if (use_relu) {
+        if (use_relu)
+        {
             relu = register_module("relu", torch::nn::ReLU(torch::nn::ReLUOptions().inplace(true)));
         }
     }
 
-    torch::Tensor forward(torch::Tensor x) {
+    torch::Tensor forward(torch::Tensor x)
+    {
         x = conv(x);
         x = bn(x);
-        if (relu) {
+        if (relu)
+        {
             x = relu(x);
         }
         return x;
     }
 };
+
 TORCH_MODULE(ConvBNReLU);
 
 
 // ASPP Convolution Branch
-struct _ASPPConvImpl : ConvBNReLUImpl {
+struct _ASPPConvImpl : ConvBNReLUImpl
+{
     _ASPPConvImpl(int64_t in_channels, int64_t out_channels, int dilation)
-        : ConvBNReLUImpl(in_channels, out_channels, 3, 1, dilation, dilation) {} // kernel=3, padding=dilation
+        : ConvBNReLUImpl(in_channels, out_channels, 3, 1, dilation, dilation)
+    {
+    } // kernel=3, padding=dilation
 };
+
 TORCH_MODULE(_ASPPConv);
 
 // ASPP Pooling Branch
-struct _ASPPPoolingImpl : torch::nn::Module {
+struct _ASPPPoolingImpl : torch::nn::Module
+{
     torch::nn::AdaptiveAvgPool2d pool{nullptr};
     ConvBNReLU conv_bn_relu{nullptr};
 
-    _ASPPPoolingImpl(int64_t in_channels, int64_t out_channels) {
-        pool = register_module("pool", torch::nn::AdaptiveAvgPool2d(torch::nn::AdaptiveAvgPool2dOptions({1,1})));
+    _ASPPPoolingImpl(int64_t in_channels, int64_t out_channels)
+    {
+        pool = register_module("pool", torch::nn::AdaptiveAvgPool2d(torch::nn::AdaptiveAvgPool2dOptions({1, 1})));
         conv_bn_relu = register_module("conv_1x1", ConvBNReLU(in_channels, out_channels, 1, 1, 0));
     }
 
-    torch::Tensor forward(torch::Tensor x) {
+    torch::Tensor forward(torch::Tensor x)
+    {
         auto size = x.sizes();
         torch::Tensor out = pool(x);
         out = conv_bn_relu(out);
@@ -94,11 +113,13 @@ struct _ASPPPoolingImpl : torch::nn::Module {
         return torch::upsample_bilinear2d(out, {size[2], size[3]}, false); // align_corners=false
     }
 };
+
 TORCH_MODULE(_ASPPPooling);
 
 
 // ASPP Module
-struct ASPPImpl : torch::nn::Module {
+struct ASPPImpl : torch::nn::Module
+{
     std::vector<_ASPPConv> convs;
     _ASPPPooling pool{nullptr};
     ConvBNReLU project{nullptr}; // Project concatenated features
@@ -106,26 +127,31 @@ struct ASPPImpl : torch::nn::Module {
 
     // Typical dilation rates for output_stride = 16 (often used with ResNet)
     // For our simple backbone, let's assume output_stride is 8
-    ASPPImpl(int64_t in_channels, int64_t out_channels, const std::vector<int>& atrous_rates = {6, 12, 18}) {
+    ASPPImpl(int64_t in_channels, int64_t out_channels, const std::vector<int>& atrous_rates = {6, 12, 18})
+    {
         // 1x1 conv
-        convs.push_back(register_module("aspp_conv_1x1", _ASPPConv(in_channels, out_channels, 1))); // Dilation 1 is like normal conv
+        convs.push_back(register_module("aspp_conv_1x1", _ASPPConv(in_channels, out_channels, 1)));
+        // Dilation 1 is like normal conv
 
-        for (size_t i = 0; i < atrous_rates.size(); ++i) {
+        for (size_t i = 0; i < atrous_rates.size(); ++i)
+        {
             convs.push_back(register_module("aspp_conv_rate_" + std::to_string(atrous_rates[i]),
                                             _ASPPConv(in_channels, out_channels, atrous_rates[i])));
         }
         pool = register_module("aspp_pool", _ASPPPooling(in_channels, out_channels));
 
         project = register_module("project_conv", ConvBNReLU(
-            out_channels * (convs.size() + 1), // +1 for pooling branch
-            out_channels, 1, 1, 0)); // 1x1 conv for projection
+                                      out_channels * (convs.size() + 1), // +1 for pooling branch
+                                      out_channels, 1, 1, 0)); // 1x1 conv for projection
 
         dropout = register_module("dropout", torch::nn::Dropout(0.5));
     }
 
-    torch::Tensor forward(torch::Tensor x) {
+    torch::Tensor forward(torch::Tensor x)
+    {
         std::vector<torch::Tensor> res;
-        for (const auto& conv_layer : convs) {
+        for (const auto& conv_layer : convs)
+        {
             res.push_back(conv_layer->forward(x));
         }
         res.push_back(pool->forward(x));
@@ -135,40 +161,47 @@ struct ASPPImpl : torch::nn::Module {
         return dropout(out);
     }
 };
+
 TORCH_MODULE(ASPP);
 
 
 // DeepLabV3 Head (Decoder)
-struct DeepLabHeadImpl : torch::nn::Module {
+struct DeepLabHeadImpl : torch::nn::Module
+{
     torch::nn::Conv2d classifier{nullptr};
 
-    DeepLabHeadImpl(int64_t in_channels, int64_t num_classes) {
+    DeepLabHeadImpl(int64_t in_channels, int64_t num_classes)
+    {
         classifier = register_module("classifier_conv", torch::nn::Conv2d(
-            torch::nn::Conv2dOptions(in_channels, num_classes, 1))); // 1x1 conv
+                                         torch::nn::Conv2dOptions(in_channels, num_classes, 1))); // 1x1 conv
     }
 
-    torch::Tensor forward(torch::Tensor features, const torch::IntArrayRef& output_size) {
+    torch::Tensor forward(torch::Tensor features, const torch::IntArrayRef& output_size)
+    {
         torch::Tensor x = classifier(features);
         // Upsample to original image size
         x = torch::upsample_bilinear2d(x, output_size, false); // align_corners=false
         return x;
     }
 };
+
 TORCH_MODULE(DeepLabHead);
 
 
 // Simplified DeepLabV3 Model
-struct SimplifiedDeepLabV3Impl : torch::nn::Module {
+struct SimplifiedDeepLabV3Impl : torch::nn::Module
+{
     torch::nn::Sequential backbone{nullptr};
     ASPP aspp{nullptr};
     DeepLabHead head{nullptr};
 
-    SimplifiedDeepLabV3Impl(int64_t num_classes = NUM_CLASSES, int64_t backbone_out_channels = BACKBONE_OUTPUT_CHANNELS) {
+    SimplifiedDeepLabV3Impl(int64_t num_classes = NUM_CLASSES, int64_t backbone_out_channels = BACKBONE_OUTPUT_CHANNELS)
+    {
         // Simplified Backbone (output stride 8)
         backbone = torch::nn::Sequential(
-            ConvBNReLU(3, 32, 3, 2, 1),           // IMG_SIZE -> IMG_SIZE/2
-            ConvBNReLU(32, 64, 3, 2, 1),          // IMG_SIZE/2 -> IMG_SIZE/4
-            ConvBNReLU(64, backbone_out_channels, 3, 2, 1)  // IMG_SIZE/4 -> IMG_SIZE/8
+            ConvBNReLU(3, 32, 3, 2, 1), // IMG_SIZE -> IMG_SIZE/2
+            ConvBNReLU(32, 64, 3, 2, 1), // IMG_SIZE/2 -> IMG_SIZE/4
+            ConvBNReLU(64, backbone_out_channels, 3, 2, 1) // IMG_SIZE/4 -> IMG_SIZE/8
         );
         register_module("backbone", backbone);
 
@@ -183,7 +216,8 @@ struct SimplifiedDeepLabV3Impl : torch::nn::Module {
         head = register_module("head", DeepLabHead(ASPP_OUTPUT_CHANNELS, num_classes));
     }
 
-    torch::Tensor forward(torch::Tensor x) {
+    torch::Tensor forward(torch::Tensor x)
+    {
         torch::IntArrayRef input_size = x.sizes(); // Capture N, C, H, W
         torch::Tensor features = backbone->forward(x);
         features = aspp->forward(features);
@@ -192,20 +226,25 @@ struct SimplifiedDeepLabV3Impl : torch::nn::Module {
         return out; // Output: [N, NUM_CLASSES, H_orig, W_orig]
     }
 };
+
 TORCH_MODULE(SimplifiedDeepLabV3);
 
 
-int main() {
+int main()
+{
     std::cout << "DeepLabV3 Semantic Segmentation Training Example (Conceptual - LibTorch C++)" << std::endl;
 
     torch::manual_seed(1); // For reproducibility
 
     // --- Device ---
     torch::DeviceType device_type;
-    if (torch::cuda::is_available()) {
+    if (torch::cuda::is_available())
+    {
         std::cout << "CUDA available! Training on GPU." << std::endl;
         device_type = torch::kCUDA;
-    } else {
+    }
+    else
+    {
         std::cout << "Training on CPU." << std::endl;
         device_type = torch::kCPU;
     }
@@ -218,7 +257,7 @@ int main() {
 
     // --- DataLoaders ---
     auto train_dataset = DummySegDataset(128) // Small dummy dataset size
-                             .map(torch::data::transforms::Stack<>()); // Default collate stacks samples
+        .map(torch::data::transforms::Stack<>()); // Default collate stacks samples
 
     auto train_loader = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(
         std::move(train_dataset),
@@ -238,13 +277,15 @@ int main() {
 
     // --- Training Loop ---
     std::cout << "\nStarting Training..." << std::endl;
-    for (int64_t epoch = 1; epoch <= NUM_EPOCHS; ++epoch) {
+    for (int64_t epoch = 1; epoch <= NUM_EPOCHS; ++epoch)
+    {
         model->train(); // Set model to training mode
         size_t batch_idx = 0;
         double epoch_loss = 0.0;
         int batch_count_for_loss_avg = 0;
 
-        for (auto& batch : *train_loader) {
+        for (auto& batch : *train_loader)
+        {
             optimizer.zero_grad();
 
             torch::Tensor images = batch.data.to(device);
@@ -263,10 +304,11 @@ int main() {
             epoch_loss += loss.item<double>();
             batch_count_for_loss_avg++;
 
-            if (batch_idx % LOG_INTERVAL == 0) {
+            if (batch_idx % LOG_INTERVAL == 0)
+            {
                 std::cout << "Epoch: " << epoch << "/" << NUM_EPOCHS
-                          << " | Batch: " << batch_idx << "/" << ( (128 / BATCH_SIZE) ) // Update 128 if dataset size changes
-                          << " | Loss: " << loss.item<double>() << std::endl;
+                    << " | Batch: " << batch_idx << "/" << ((128 / BATCH_SIZE)) // Update 128 if dataset size changes
+                    << " | Loss: " << loss.item<double>() << std::endl;
             }
             batch_idx++;
         }
