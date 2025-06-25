@@ -12,7 +12,7 @@
 
 using namespace std;
 
-class SimpleModule : xt::Module
+class SimpleModule : public xt::Module
 {
 public:
     SimpleModule(): fc1(10, 20), fc2(20, 10), fc3(10, 5), flatten(5, 1)
@@ -61,6 +61,16 @@ int main()
 {
     std::cout.precision(10);
 
+
+    int64_t num_rows = 1000;
+    int64_t X_num_cols = 10;
+    int64_t Y_num_cols = 1;
+
+    torch::Tensor X = torch::rand({num_rows, X_num_cols}, torch::kFloat32);
+
+    torch::Tensor Y = torch::rand({num_rows, Y_num_cols}, torch::kFloat32);
+
+
     std::vector<std::shared_ptr<xt::Module>> transform_list;
     transform_list.push_back(std::make_shared<xt::transforms::image::Resize>(std::vector<int64_t>{32, 32}));
     transform_list.push_back(
@@ -74,7 +84,7 @@ int main()
 
     xt::dataloaders::ExtendedDataLoader data_loader(dataset, 64, true, 2, /*prefetch_factor=*/2);
 
-    xt::models::LeNet5 model(10);
+    SimpleModule model;
     model.to(torch::Device(torch::kCPU));
     model.train();
 
@@ -85,9 +95,8 @@ int main()
     trainer.set_max_epochs(10).set_optimizer(optimizer)
            .set_loss_fn([](auto output, auto target)
            {
-               return torch::nll_loss(output, target);
-           })
-           .add_callback(logger);
+               return torch::mse_loss(output, target);
+           });
 
     trainer.fit(model, data_loader, &data_loader, torch::Device(torch::kCPU));
 
