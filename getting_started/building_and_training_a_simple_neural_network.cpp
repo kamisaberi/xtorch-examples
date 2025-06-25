@@ -15,17 +15,29 @@ using namespace std;
 class SimpleModule : xt::Module
 {
 public:
-    SimpleModule(): fc1(10, 20), fc2(20, 10), fc3(10, 5)
+    SimpleModule(): fc1(10, 20), fc2(20, 10), fc3(10, 5), flatten(5, 2)
     {
         register_module("fc1", fc1);
         register_module("fc2", fc2);
         register_module("fc3", fc3);
+        register_module("flatten", flatten);
+    }
+
+    auto forward(std::initializer_list<std::any> tensors) -> std::any override
+    {
+    }
+
+    torch::Tensor forward(torch::Tensor input)
+    {
+        std::initializer_list<std::any> tensors = {input};
+        return any_cast<torch::Tensor>(this->forward(tensors));
     }
 
 private:
     torch::nn::Linear fc1 = {nullptr};
     torch::nn::Linear fc2 = {nullptr};
     torch::nn::Linear fc3 = {nullptr};
+    torch::nn::Flatten flatten = {nullptr};
 };
 
 
