@@ -25,6 +25,21 @@ public:
 
     auto forward(std::initializer_list<std::any> tensors) -> std::any override
     {
+        std::vector<std::any> any_vec(tensors);
+
+        std::vector<torch::Tensor> tensor_vec;
+        for (const auto& item : any_vec)
+        {
+            tensor_vec.push_back(std::any_cast<torch::Tensor>(item));
+        }
+
+        torch::Tensor input = tensor_vec[0];
+
+        input = fc1->forward(input);
+        input = fc2->forward(input);
+        input = fc3->forward(input);
+        input = flatten->forward(input);
+        return input;
     }
 
     torch::Tensor forward(torch::Tensor input)
