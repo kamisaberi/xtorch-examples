@@ -15,7 +15,7 @@ using namespace std;
 class SimpleModule : xt::Module
 {
 public:
-    SimpleModule(): fc1(10, 20), fc2(20, 10), fc3(10, 5), flatten(5, 2)
+    SimpleModule(): fc1(10, 20), fc2(20, 10), fc3(10, 5), flatten(5, 1)
     {
         register_module("fc1", fc1);
         register_module("fc2", fc2);
