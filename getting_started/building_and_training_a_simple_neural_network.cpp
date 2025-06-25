@@ -35,6 +35,7 @@ public:
 
         torch::Tensor input = tensor_vec[0];
 
+        input = input.to(torch::kFloat32);
         input = fc1->forward(input);
         input = fc2->forward(input);
         input = fc3->forward(input);
