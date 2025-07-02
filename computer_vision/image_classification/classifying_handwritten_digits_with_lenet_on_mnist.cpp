@@ -37,7 +37,7 @@ int main()
     auto logger = std::make_shared<xt::LoggingCallback>("[MyTrain]", /*log_every_N_batches=*/20, /*log_time=*/true);
     xt::Trainer trainer;
     trainer.set_max_epochs(10).set_optimizer(optimizer)
-           .set_loss_fn([](auto output, auto target)
+           .set_loss_fn([](const auto& output, const auto& target)
            {
                return torch::nll_loss(output, target);
            })

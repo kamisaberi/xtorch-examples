@@ -10,7 +10,7 @@ find_package(CURL REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(SndFile REQUIRED)
-find_package(onnxruntime REQUIRED)
+#find_package(onnxruntime REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -34,8 +34,9 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
         OpenSSL::SSL
         OpenSSL::Crypto
         ZLIB::ZLIB
-        ${ONNXRUNTIME_LIBRARY}
-        onnxruntime
+#        ${ONNXRUNTIME_LIBRARY}
+#        onnxruntime
+        ONNX::Runtime
 )
 
 
