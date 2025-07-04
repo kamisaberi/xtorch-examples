@@ -90,13 +90,13 @@ target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_
 
 #========================================= fine_tuning_resnet_on_cifar10 =========================================
 
-add_executable(fine_tuning_resnet_on_cifar10 ${TEST_SOURCE_FILES} fine_tuning_resnet_on_cifar10.cpp)
-target_link_libraries(fine_tuning_resnet_on_cifar10 "${TORCH_LIBRARIES}")
-set_property(TARGET fine_tuning_resnet_on_cifar10 PROPERTY CXX_STANDARD 17)
-target_include_directories(fine_tuning_resnet_on_cifar10 PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
-target_link_libraries(fine_tuning_resnet_on_cifar10 ${TEST_LIBRARIES})
-target_include_directories(fine_tuning_resnet_on_cifar10 PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
-target_link_libraries(fine_tuning_resnet_on_cifar10 ${TEST_LIBRARIES})
+#add_executable(fine_tuning_resnet_on_cifar10 ${TEST_SOURCE_FILES} fine_tuning_resnet_on_cifar10.cpp)
+#target_link_libraries(fine_tuning_resnet_on_cifar10 "${TORCH_LIBRARIES}")
+#set_property(TARGET fine_tuning_resnet_on_cifar10 PROPERTY CXX_STANDARD 17)
+#target_include_directories(fine_tuning_resnet_on_cifar10 PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
+#target_link_libraries(fine_tuning_resnet_on_cifar10 ${TEST_LIBRARIES})
+#target_include_directories(fine_tuning_resnet_on_cifar10 PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+#target_link_libraries(fine_tuning_resnet_on_cifar10 ${TEST_LIBRARIES})
 
 
 

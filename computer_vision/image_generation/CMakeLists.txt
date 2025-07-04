@@ -37,6 +37,7 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 #        ${ONNXRUNTIME_LIBRARY}
 #        onnxruntime
         ONNX::Runtime
+        ${LIBZIP_LIBRARIES}  # Add this line
 )
 
 
