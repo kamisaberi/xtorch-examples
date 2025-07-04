@@ -1,6 +1,15 @@
 cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 project(image_classification)
 list(APPEND CMAKE_PREFIX_PATH /home/kami/libs/cpp/libtorch/)
+
+
+#find_package(PkgConfig REQUIRED)
+#pkg_check_modules(LIBZIP REQUIRED libzip)
+#
+#include_directories(${LIBZIP_INCLUDE_DIRS})
+#link_directories(${LIBZIP_LIBRARY_DIRS})
+
+
 find_package(Torch REQUIRED)
 find_package(xTorch REQUIRED)
 find_package(LibLZMA REQUIRED)
