@@ -7,11 +7,12 @@
 #include <torch/torch.h>
 
 namespace fs = std::filesystem;
-
+using namespace std;
 
 int main(int argc, char* argv[])
 {
     xt::datasets::CelebA celeb = xt::datasets::CelebA("/home/kami/Documents/datasets/");
+    cout << celeb.size().value() << endl;
 
     return 0;
 }
