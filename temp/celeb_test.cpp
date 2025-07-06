@@ -12,17 +12,19 @@ int main()
         const int nz = 100; // Size of latent vector
         const int ngf = 64; // Size of feature maps in generator
         const int ndf = 64; // Size of feature maps in discriminator
-        const int nc = 1; // Number of channels (1 for MNIST)
+        const int nc = 3; // Number of channels (1 for MNIST)
         const int num_epochs = 5;
         const int batch_size = 64;
         const double lr = 0.0002;
         const double beta1 = 0.5;
+        const vector<int64_t> image_size = {64, 64};
         const std::string dataroot = "./data";
 
         // Device
         torch::Device device(torch::cuda::is_available() ? torch::kCUDA : torch::kCPU);
         std::cout << "Using device: " << (device.is_cuda() ? "CUDA" : "CPU") << std::endl;
 
+        device = torch::Device(torch::kCPU);
         // Initialize models
         xt::models::DCGAN::Generator netG(nz, ngf, nc);
         xt::models::DCGAN::Discriminator netD(nc, ndf);
@@ -38,15 +40,22 @@ int main()
 
         // Transforms (adjusted normalization for MNIST to [-1, 1])
         std::vector<std::shared_ptr<xt::Module>> transform_list;
+        transform_list.push_back(std::make_shared<xt::transforms::image::Resize>(image_size));
+        transform_list.push_back(std::make_shared<xt::transforms::image::CenterCrop>(image_size));
         transform_list.push_back(
-            std::make_shared<xt::transforms::general::Normalize>(std::vector<float>{0.5}, std::vector<float>{0.5}));
+            std::make_shared<xt::transforms::general::Normalize>(std::vector<float>{0.5, 0.5, 0.5,},
+                                                                 std::vector<float>{0.5, 0.5, 0.5}));
+
 
         auto compose = std::make_unique<xt::transforms::Compose>(transform_list);
         auto dataset = xt::datasets::CelebA("/home/kami/Documents/datasets/",
-                                           xt::datasets::DataMode::TRAIN, false,
-                                           std::move(compose));
-
+                                            xt::datasets::DataMode::TRAIN, false,
+                                            std::move(compose));
+        cout << dataset.get(0).data.sizes() << endl;
+        cout << dataset.get(1).data.sizes() << endl;
+        cout << dataset.get(2).data.sizes() << endl;
         xt::dataloaders::ExtendedDataLoader data_loader(dataset, batch_size, true, 2, /*prefetch_factor=*/2);
+
         // return 0;
         for (int epoch = 0; epoch < num_epochs; ++epoch)
         {
