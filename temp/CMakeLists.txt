@@ -19,6 +19,8 @@ find_package(CURL REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(SndFile REQUIRED)
+#find_package(LibZip REQUIRED)
+
 #find_package(onnxruntime REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -47,18 +49,25 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
         #        onnxruntime
         ONNX::Runtime
         ${LIBZIP_LIBRARIES}  # Add this line
+        #        LibZip::zip
+
+        #        LibZip::zip
+
 )
+
 
 #========================================= celeb =========================================
 
 add_executable(celeb ${TEST_SOURCE_FILES} celeb_test.cpp)
-target_link_libraries(celeb "${TORCH_LIBRARIES}")
-set_property(TARGET celeb PROPERTY CXX_STANDARD 17)
-target_include_directories(celeb PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
-target_link_libraries(celeb ${TEST_LIBRARIES})
-target_include_directories(celeb PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
-target_link_libraries(celeb ${TEST_LIBRARIES})
 
+target_link_libraries(celeb PRIVATE xTorch::xTorch
+)
+#target_link_libraries(celeb "${TORCH_LIBRARIES}")
+set_property(TARGET celeb PROPERTY CXX_STANDARD 17)
+#target_include_directories(celeb PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
+#target_link_libraries(celeb ${TEST_LIBRARIES})
+target_include_directories(celeb PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+#target_link_libraries(celeb ${TEST_LIBRARIES})
 
 
 #========================================= classifying_handwritten_digits_with_lenet_on_mnist =========================================

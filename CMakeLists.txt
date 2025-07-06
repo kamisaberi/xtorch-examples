@@ -81,5 +81,5 @@ message(STATUS "ONNX Runtime ready. Use target 'ONNX::Runtime' to link.")
 # These subdirectories can now use the ONNX::Runtime target.
 message(STATUS "Adding subdirectories...")
 
-#add_subdirectory(temp)
+add_subdirectory(temp)
 add_subdirectory(computer_vision)

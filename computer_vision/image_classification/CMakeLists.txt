@@ -85,12 +85,17 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 #========================================= classifying_handwritten_digits_with_lenet_on_mnist =========================================
 
 add_executable(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_SOURCE_FILES} classifying_handwritten_digits_with_lenet_on_mnist.cpp)
-target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist "${TORCH_LIBRARIES}")
+#target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE "${TORCH_LIBRARIES}" xTorch::xTorch )
+
+target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist
+        PRIVATE
+        xTorch::xTorch
+)
 set_property(TARGET classifying_handwritten_digits_with_lenet_on_mnist PROPERTY CXX_STANDARD 17)
 #target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
 #target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
 target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS} )
-target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
+#target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
 
 
 
