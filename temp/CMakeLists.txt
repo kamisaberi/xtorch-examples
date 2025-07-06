@@ -59,15 +59,24 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 #========================================= celeb =========================================
 
 add_executable(celeb ${TEST_SOURCE_FILES} celeb_test.cpp)
-
-target_link_libraries(celeb PRIVATE xTorch::xTorch
-)
-#target_link_libraries(celeb "${TORCH_LIBRARIES}")
+target_link_libraries(celeb "${TORCH_LIBRARIES}")
 set_property(TARGET celeb PROPERTY CXX_STANDARD 17)
-#target_include_directories(celeb PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
-#target_link_libraries(celeb ${TEST_LIBRARIES})
+target_include_directories(celeb PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
+target_link_libraries(celeb ${TEST_LIBRARIES})
 target_include_directories(celeb PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
-#target_link_libraries(celeb ${TEST_LIBRARIES})
+target_link_libraries(celeb ${TEST_LIBRARIES})
+
+
+#add_executable(celeb ${TEST_SOURCE_FILES} celeb_test.cpp)
+#
+#target_link_libraries(celeb PRIVATE xTorch::xTorch
+#)
+##target_link_libraries(celeb "${TORCH_LIBRARIES}")
+#set_property(TARGET celeb PROPERTY CXX_STANDARD 17)
+##target_include_directories(celeb PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
+##target_link_libraries(celeb ${TEST_LIBRARIES})
+#target_include_directories(celeb PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+##target_link_libraries(celeb ${TEST_LIBRARIES})
 
 
 #========================================= classifying_handwritten_digits_with_lenet_on_mnist =========================================

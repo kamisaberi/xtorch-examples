@@ -11,6 +11,7 @@ namespace fs = std::filesystem;
 
 int main(int argc, char* argv[])
 {
+    xt::datasets::CelebA celeb = xt::datasets::CelebA("/home/kami/Documents/datasets/");
 
     return 0;
 }
