@@ -19,6 +19,8 @@ find_package(CURL REQUIRED)
 find_package(OpenCV REQUIRED)
 find_package(ZLIB REQUIRED)
 find_package(SndFile REQUIRED)
+#find_package(LibZip REQUIRED)
+
 #find_package(onnxruntime REQUIRED)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -47,6 +49,10 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 #        onnxruntime
         ONNX::Runtime
         ${LIBZIP_LIBRARIES}  # Add this line
+#        LibZip::zip
+
+        #        LibZip::zip
+
 )
 
 
@@ -81,9 +87,9 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 add_executable(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_SOURCE_FILES} classifying_handwritten_digits_with_lenet_on_mnist.cpp)
 target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist "${TORCH_LIBRARIES}")
 set_property(TARGET classifying_handwritten_digits_with_lenet_on_mnist PROPERTY CXX_STANDARD 17)
-target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
-target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
-target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+#target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
+#target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
+target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS} )
 target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_LIBRARIES})
 
 
