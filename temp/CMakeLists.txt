@@ -90,6 +90,16 @@ target_include_directories(py_test PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE
 target_link_libraries(py_test ${TEST_LIBRARIES})
 
 
+#========================================= gdown_test =========================================
+
+add_executable(gdown_test ${TEST_SOURCE_FILES} gdown_test.cpp)
+target_link_libraries(gdown_test "${TORCH_LIBRARIES}")
+set_property(TARGET gdown_test PROPERTY CXX_STANDARD 17)
+target_include_directories(gdown_test PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS})
+target_link_libraries(gdown_test ${TEST_LIBRARIES})
+target_include_directories(gdown_test PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+target_link_libraries(gdown_test ${TEST_LIBRARIES})
+
 #
 ##========================================= fine_tuning_resnet_on_cifar10 =========================================
 #
