@@ -17,23 +17,14 @@ int main()
 
     std::vector<std::shared_ptr<xt::Module>> transform_list;
     transform_list.push_back(std::make_shared<xt::transforms::image::Resize>(std::vector<int64_t>{32, 32}));
-    transform_list.push_back(
-        std::make_shared<xt::transforms::general::Normalize>(std::vector<float>{0.5}, std::vector<float>{0.5}));
-
+    transform_list.push_back(std::make_shared<xt::transforms::general::Normalize>(std::vector<float>{0.5}, std::vector<float>{0.5}));
     auto compose = std::make_unique<xt::transforms::Compose>(transform_list);
-
-    auto dataset = xt::datasets::MNIST("/home/kami/Documents/datasets/",
-                                       xt::datasets::DataMode::TRAIN, false,
-                                       std::move(compose));
-
+    auto dataset = xt::datasets::MNIST("/home/kami/Documents/datasets/",xt::datasets::DataMode::TRAIN, false,std::move(compose));
     xt::dataloaders::ExtendedDataLoader data_loader(dataset, 64, true, 2, /*prefetch_factor=*/2);
-
     xt::models::LeNet5 model(10);
     model.to(torch::Device(torch::kCPU));
     model.train();
-
     torch::optim::Adam optimizer(model.parameters(), torch::optim::AdamOptions(1e-3));
-
     auto logger = std::make_shared<xt::LoggingCallback>("[MyTrain]", /*log_every_N_batches=*/20, /*log_time=*/true);
     xt::Trainer trainer;
     trainer.set_max_epochs(10).set_optimizer(optimizer)
@@ -42,9 +33,6 @@ int main()
                return torch::nll_loss(output, target);
            })
            .add_callback(logger);
-
     trainer.fit(model, data_loader, &data_loader, torch::Device(torch::kCPU));
-
-
     return 0;
 }
