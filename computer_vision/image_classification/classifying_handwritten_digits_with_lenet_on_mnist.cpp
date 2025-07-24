@@ -43,7 +43,7 @@ int main()
             if (btc % 20 == 0)
             {
                 auto t = std::chrono::steady_clock::now();
-                auto d = t - start_time;
+                auto d = t - epoch_start;
                 auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
                 cout << "COPY: " << btc << " DIFF:" << d.count() << endl;
             }
@@ -52,7 +52,7 @@ int main()
             if (btc % 20 == 0)
             {
                 auto t = std::chrono::steady_clock::now();
-                auto d = t - start_time;
+                auto d = t - epoch_start;
                 auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
                 cout << "FORWARD: " << btc << " DIFF:" << d.count() << endl;
             }
@@ -63,7 +63,7 @@ int main()
             if (btc % 20 == 0)
             {
                 auto t = std::chrono::steady_clock::now();
-                auto d = t - start_time;
+                auto d = t - epoch_start;
                 auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
                 cout << "LOSS: " << btc << " DIFF:" << d.count() << endl;
             }
@@ -72,7 +72,7 @@ int main()
             if (btc % 20 == 0)
             {
                 auto t = std::chrono::steady_clock::now();
-                auto d = t - start_time;
+                auto d = t - epoch_start;
                 auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
                 cout << "BACKWARD: " << btc << " DIFF:" << d.count() << endl;
             }
@@ -82,7 +82,7 @@ int main()
             if (btc % 20 == 0)
             {
                 auto t = std::chrono::steady_clock::now();
-                auto d = t - start_time;
+                auto d = t - epoch_start;
                 auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
                 cout << "ZERO GRAD: " << btc << " DIFF:" << d.count() << endl;
             }
@@ -91,7 +91,7 @@ int main()
             if (btc % 20 == 0)
             {
                 auto t = std::chrono::steady_clock::now();
-                auto d = t - start_time;
+                auto d = t - epoch_start;
                 auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
                 cout << "STEP: " << btc << " DIFF:" << d.count() << endl;
             }
@@ -99,7 +99,8 @@ int main()
             btc++;
             if (btc % 20 == 0)
             {
-                cout << "Batch: " << btc << " Loss:" << loss << endl;
+                cout << "Batch: " << btc << " Loss:" << loss.item() << endl;
+                cout << "==============================================\n";
             }
         }
     }
