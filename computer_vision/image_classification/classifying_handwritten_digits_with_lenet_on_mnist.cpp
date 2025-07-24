@@ -14,6 +14,7 @@ using namespace std;
 int main()
 {
     std::cout.precision(10);
+    int epochs = 1;
 
     std::vector<std::shared_ptr<xt::Module>> transform_list;
     transform_list.push_back(std::make_shared<xt::transforms::image::Resize>(std::vector<int64_t>{32, 32}));
@@ -29,7 +30,7 @@ int main()
     torch::optim::Adam optimizer(model.parameters(), torch::optim::AdamOptions(1e-3));
     auto logger = std::make_shared<xt::LoggingCallback>("[MyTrain]", /*log_every_N_batches=*/20, /*log_time=*/true);
     xt::Trainer trainer;
-    trainer.set_max_epochs(10).set_optimizer(optimizer)
+    trainer.set_max_epochs(1).set_optimizer(optimizer)
            .set_loss_fn([](const auto& output, const auto& target)
            {
                return torch::nll_loss(output, target);
