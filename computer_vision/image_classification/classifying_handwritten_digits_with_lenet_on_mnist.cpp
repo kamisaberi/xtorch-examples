@@ -24,7 +24,7 @@ int main()
     auto compose = std::make_unique<xt::transforms::Compose>(transform_list);
     auto dataset = xt::datasets::MNIST("/home/kami/Documents/datasets/", xt::datasets::DataMode::TRAIN, false,
                                        std::move(compose));
-    xt::dataloaders::ExtendedDataLoader data_loader(dataset, 64, true, 2, /*prefetch_factor=*/2);
+    xt::dataloaders::ExtendedDataLoader data_loader(dataset, 64, true, 2);
     xt::models::LeNet5 model(10);
     model.to(torch::Device(torch::kCPU));
     model.train();
