@@ -86,11 +86,13 @@ for epoch in range(num_epochs):
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
-        print(f"Batch Counter:{batch_counter}Loss: {loss.item():.4f}")
+        if batch_counter%20 == 0:
+            print(f"Batch Counter:{batch_counter}Loss: {loss.item():.4f}")
         batch_counter+=1
 
     # Print epoch statistics
     epoch_loss = running_loss / len(train_loader)
+
     epoch_acc = 100 * correct / total
     print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {epoch_loss:.4f}, Accuracy: {epoch_acc:.2f}%")
 
