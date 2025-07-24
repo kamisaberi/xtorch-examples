@@ -35,6 +35,7 @@ int main()
         int btc = 0;
         for (auto& batch_data : data_loader)
         {
+            btc++;
             auto epoch_start = std::chrono::steady_clock::now();
 
             torch::Tensor data = batch_data.first;
@@ -96,7 +97,6 @@ int main()
                 cout << "STEP: " << btc << " DIFF:" << d.count() << endl;
             }
 
-            btc++;
             if (btc % 20 == 0)
             {
                 cout << "Batch: " << btc << " Loss:" << loss.item() << endl;
