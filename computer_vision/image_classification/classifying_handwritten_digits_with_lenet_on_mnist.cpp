@@ -7,6 +7,7 @@
 #include <optional>   // For torch::optional and std::optional
 #include <chrono>     // For timing in main
 #include <xtorch/xtorch.h>
+#include  <chrono>
 
 using namespace std;
 
@@ -30,12 +31,20 @@ int main()
     torch::optim::Adam optimizer(model.parameters(), torch::optim::AdamOptions(1e-3));
     auto logger = std::make_shared<xt::LoggingCallback>("[MyTrain]", /*log_every_N_batches=*/20, /*log_time=*/true);
     xt::Trainer trainer;
+
     trainer.set_max_epochs(1).set_optimizer(optimizer)
            .set_loss_fn([](const auto& output, const auto& target)
            {
                return torch::nll_loss(output, target);
            })
            .add_callback(logger);
+    auto start_time = std::chrono::steady_clock::now();
     trainer.fit(model, data_loader, &data_loader, torch::Device(torch::kCPU));
+
+    auto end_time = std::chrono::steady_clock::now();
+    auto duration = end_time - start_time;
+    auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(duration);
+    std::cout << "Total loop duration: " << duration_ms.count() << " milliseconds." << std::endl;
+
     return 0;
 }
