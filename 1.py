@@ -68,7 +68,7 @@ for epoch in range(num_epochs):
     running_loss = 0.0
     correct = 0
     total = 0
-
+    batch_counter = 1
     for images, labels in train_loader:
         images, labels = images.to(device), labels.to(device)
 
@@ -86,6 +86,8 @@ for epoch in range(num_epochs):
         _, predicted = torch.max(outputs.data, 1)
         total += labels.size(0)
         correct += (predicted == labels).sum().item()
+        print(f"Batch Counter:{batch_counter}Loss: {loss.item():.4f}")
+        batch_counter+=1
 
     # Print epoch statistics
     epoch_loss = running_loss / len(train_loader)
