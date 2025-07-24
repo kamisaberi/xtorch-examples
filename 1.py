@@ -5,13 +5,14 @@ import torchvision
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 from torch.utils.data import DataLoader
+import time
 
 # Set device (GPU if available, else CPU)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print(f"Using device: {device}")
 
 # Define hyperparameters
-num_epochs = 10
+num_epochs = 1
 batch_size = 64
 learning_rate = 0.001
 
@@ -60,6 +61,7 @@ model = LeNet5().to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
+st = time.time()
 # Training loop
 for epoch in range(num_epochs):
     model.train()
@@ -90,6 +92,8 @@ for epoch in range(num_epochs):
     epoch_acc = 100 * correct / total
     print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {epoch_loss:.4f}, Accuracy: {epoch_acc:.2f}%")
 
+et = time.time()
+print("Time Elapsed:" , et - st)
 print("Training finished!")
 
 # Save the trained model
