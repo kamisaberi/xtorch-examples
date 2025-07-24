@@ -32,7 +32,7 @@ int main()
     auto start_time = std::chrono::steady_clock::now();
     for (int i = 1; i <= epochs; i++)
     {
-        int btc = 0
+        int btc = 0;
         for (auto& batch_data : data_loader)
         {
             torch::Tensor data = batch_data.first;
