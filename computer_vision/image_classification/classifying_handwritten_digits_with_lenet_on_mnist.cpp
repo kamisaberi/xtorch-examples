@@ -14,7 +14,10 @@ using namespace std;
 
 int main()
 {
+    int threads = 16;
     std::cout.precision(10);
+    torch::set_num_threads(16);  // Use all 16 cores
+    std::cout << "Using " << torch::get_num_threads() << " threads for LibTorch" << std::endl;
     int epochs = 1;
 
     std::vector<std::shared_ptr<xt::Module>> transform_list;
@@ -24,7 +27,7 @@ int main()
     auto compose = std::make_unique<xt::transforms::Compose>(transform_list);
     auto dataset = xt::datasets::MNIST("/home/kami/Documents/datasets/", xt::datasets::DataMode::TRAIN, false,
                                        std::move(compose));
-    xt::dataloaders::ExtendedDataLoader data_loader(dataset, 64, true, 2);
+    xt::dataloaders::ExtendedDataLoader data_loader(dataset, 64, true, 16, 2);
     xt::models::LeNet5 model(10);
     model.to(torch::Device(torch::kCPU));
     model.train();
