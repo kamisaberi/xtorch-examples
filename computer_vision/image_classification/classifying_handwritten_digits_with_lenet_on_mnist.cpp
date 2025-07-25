@@ -44,66 +44,65 @@ int main()
             torch::Tensor data = batch_data.first;
             torch::Tensor target = batch_data.second;
 
-            if (btc % 20 == 0)
-            {
-                auto t = std::chrono::steady_clock::now();
-                auto d = t - epoch_start;
-                auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
-                cout << "COPY: " << btc << " DIFF:" << d.count() << endl;
-            }
+            // if (btc % 20 == 0)
+            // {
+            //     auto t = std::chrono::steady_clock::now();
+            //     auto d = t - epoch_start;
+            //     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
+            //     cout << "COPY: " << btc << " DIFF:" << d.count() << endl;
+            // }
 
             auto output_any = model.forward({data});
-            if (btc % 20 == 0)
-            {
-                auto t = std::chrono::steady_clock::now();
-                auto d = t - epoch_start;
-                auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
-                cout << "FORWARD: " << btc << " DIFF:" << d.count() << endl;
-            }
+            // if (btc % 20 == 0)
+            // {
+            //     auto t = std::chrono::steady_clock::now();
+            //     auto d = t - epoch_start;
+            //     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
+            //     cout << "FORWARD: " << btc << " DIFF:" << d.count() << endl;
+            // }
 
 
             auto output = std::any_cast<torch::Tensor>(output_any);
             torch::Tensor loss = torch::nll_loss(output, target);
-            if (btc % 20 == 0)
-            {
-                auto t = std::chrono::steady_clock::now();
-                auto d = t - epoch_start;
-                auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
-                cout << "LOSS: " << btc << " DIFF:" << d.count() << endl;
-            }
+            // if (btc % 20 == 0)
+            // {
+            //     auto t = std::chrono::steady_clock::now();
+            //     auto d = t - epoch_start;
+            //     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
+            //     cout << "LOSS: " << btc << " DIFF:" << d.count() << endl;
+            // }
 
             loss.backward();
-            if (btc % 20 == 0)
-            {
-                auto t = std::chrono::steady_clock::now();
-                auto d = t - epoch_start;
-                auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
-                cout << "BACKWARD: " << btc << " DIFF:" << d.count() << endl;
-            }
+            // if (btc % 20 == 0)
+            // {
+            //     auto t = std::chrono::steady_clock::now();
+            //     auto d = t - epoch_start;
+            //     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
+            //     cout << "BACKWARD: " << btc << " DIFF:" << d.count() << endl;
+            // }
 
 
             optimizer.zero_grad();
-            if (btc % 20 == 0)
-            {
-                auto t = std::chrono::steady_clock::now();
-                auto d = t - epoch_start;
-                auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
-                cout << "ZERO GRAD: " << btc << " DIFF:" << d.count() << endl;
-            }
+            // if (btc % 20 == 0)
+            // {
+            //     auto t = std::chrono::steady_clock::now();
+            //     auto d = t - epoch_start;
+            //     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
+            //     cout << "ZERO GRAD: " << btc << " DIFF:" << d.count() << endl;
+            // }
 
             optimizer.step();
-            if (btc % 20 == 0)
-            {
-                auto t = std::chrono::steady_clock::now();
-                auto d = t - epoch_start;
-                auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
-                cout << "STEP: " << btc << " DIFF:" << d.count() << endl;
-            }
+            // if (btc % 20 == 0)
+            // {
+            //     auto t = std::chrono::steady_clock::now();
+            //     auto d = t - epoch_start;
+            //     auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(d);
+            //     cout << "STEP: " << btc << " DIFF:" << d.count() << endl;
+            // }
 
             if (btc % 20 == 0)
             {
                 cout << "Batch: " << btc << " Loss:" << loss.item() << endl;
-                cout << "==============================================\n";
             }
         }
     }
