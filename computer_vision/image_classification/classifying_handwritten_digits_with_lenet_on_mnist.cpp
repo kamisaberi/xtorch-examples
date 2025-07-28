@@ -18,7 +18,7 @@ int main()
     std::cout.precision(10);
     torch::set_num_threads(16);  // Use all 16 cores
     std::cout << "Using " << torch::get_num_threads() << " threads for LibTorch" << std::endl;
-    int epochs = 1;
+    int epochs = 10;
 
     std::vector<std::shared_ptr<xt::Module>> transform_list;
     transform_list.push_back(std::make_shared<xt::transforms::image::Resize>(std::vector<int64_t>{32, 32}));
