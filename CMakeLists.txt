@@ -137,4 +137,4 @@ find_package(SndFile REQUIRED)
 
 
 add_subdirectory(temp)
-add_subdirectory(computer_vision)
+#add_subdirectory(computer_vision)
