@@ -88,7 +88,7 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 #========================================= classifying_handwritten_digits_with_lenet_on_mnist =========================================
 
 add_executable(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_SOURCE_FILES} classifying_handwritten_digits_with_lenet_on_mnist.cpp)
-#target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE "${TORCH_LIBRARIES}" xTorch::xTorch )
+ #target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE "${TORCH_LIBRARIES}" xTorch::xTorch )
 
 target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist
         PRIVATE

@@ -12,7 +12,7 @@ project(image_generation)
 find_package(xTorch REQUIRED)
 
 # Use the correct variable 'xTorch_FOUND' (lowercase 'x')
-if(xTorch_FOUND)
+if (xTorch_FOUND)
     # The xTorch_DIR variable is automatically set by find_package.
     # It points to the directory containing xTorchConfig.cmake,
     # e.g., /usr/local/lib/cmake/xTorch
@@ -31,13 +31,13 @@ if(xTorch_FOUND)
     set(BUNDLED_LIBTORCH_PATH "${XTORCH_INSTALL_DIR}/include/xtorch/third_party/libtorch")
 
     # Check if that directory actually exists before adding it
-    if(EXISTS "${BUNDLED_LIBTORCH_PATH}")
+    if (EXISTS "${BUNDLED_LIBTORCH_PATH}")
         message(STATUS "Found bundled libtorch at: ${BUNDLED_LIBTORCH_PATH}")
         list(PREPEND CMAKE_PREFIX_PATH ${BUNDLED_LIBTORCH_PATH})
-    else()
+    else ()
         message(FATAL_ERROR "Could not find the bundled libtorch directory at the expected path: ${BUNDLED_LIBTORCH_PATH}")
-    endif()
-endif()
+    endif ()
+endif ()
 find_package(Torch REQUIRED)
 find_package(LibLZMA REQUIRED)
 find_package(LibArchive REQUIRED)
@@ -83,7 +83,6 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 )
 
 
-
 #add_executable(${PROJECT_NAME} ${TEST_SOURCE_FILES})
 #set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
@@ -112,16 +111,9 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 #========================================= generating_images_with_dcgan =========================================
 
 add_executable(generating_images_with_dcgan ${TEST_SOURCE_FILES} generating_images_with_dcgan.cpp)
-target_link_libraries(generating_images_with_dcgan
-        PRIVATE
-        xTorch::xTorch
-)
-
+target_link_libraries(generating_images_with_dcgan PRIVATE xTorch::xTorch)
 set_property(TARGET generating_images_with_dcgan PROPERTY CXX_STANDARD 17)
-target_include_directories(generating_images_with_dcgan PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS} )
-#target_link_libraries(generating_images_with_dcgan ${TEST_LIBRARIES})
-#target_include_directories(generating_images_with_dcgan PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
-#target_link_libraries(generating_images_with_dcgan ${TEST_LIBRARIES})
+target_include_directories(generating_images_with_dcgan PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
 
 
 
