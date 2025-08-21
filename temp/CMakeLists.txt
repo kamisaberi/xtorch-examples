@@ -231,10 +231,10 @@ set(TEST_LIBRARIES ${CURL_LIBRARIES}
 
 #========================================= classifying_handwritten_digits_with_lenet_on_mnist =========================================
 
-add_executable(classifying_handwritten_digits_with_lenet_on_mnist ${TEST_SOURCE_FILES} gdown_test.cpp)
-target_link_libraries(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE xTorch::xTorch)
-set_property(TARGET classifying_handwritten_digits_with_lenet_on_mnist PROPERTY CXX_STANDARD 17)
-target_include_directories(classifying_handwritten_digits_with_lenet_on_mnist PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
+add_executable(tmp ${TEST_SOURCE_FILES} gdown_test.cpp)
+target_link_libraries(tmp PRIVATE xTorch::xTorch)
+set_property(TARGET tmp PROPERTY CXX_STANDARD 17)
+target_include_directories(tmp PRIVATE ${LIBTAR_INCLUDE_DIR} ${TORCH_INCLUDE_DIRS} ${LibArchive_INCLUDE_DIRS} ${XTORCH_INCLUDE_DIRS})
 
 #========================================= generating_images_with_dcgan =========================================
 
